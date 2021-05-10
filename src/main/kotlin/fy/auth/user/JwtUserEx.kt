@@ -1,6 +1,8 @@
 package fy.auth.user
 
 import ez.jwt.JwtUser
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 
 fun JwtUser.getIdOrNull(userType: UserType): String? {
   val prefix = "user:$userType:"
@@ -12,5 +14,8 @@ fun JwtUser.getIdOrNull(userType: UserType): String? {
 }
 
 fun JwtUser.getId(userType: UserType): String {
-  return getIdOrNull(userType) ?: throw IllegalArgumentException("user $id is not $userType")
+  return getIdOrNull(userType) ?: throw ResponseStatusException(
+    HttpStatus.FORBIDDEN,
+    "user $id is not $userType"
+  )
 }
