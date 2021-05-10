@@ -35,5 +35,6 @@ class AuthAutoConfiguration {
   fun userParsingFilter(jwtUtil: JwtUtil) = UserParsingFilter(userParsingFilterOrder, jwtUtil)
 
   @Bean
-  fun authInterceptor() = AuthInterceptor(authInterceptorOrder, serviceApiKeyName, serviceApiKeyValue)
+  fun authInterceptor() =
+    AuthInterceptor(authInterceptorOrder, serviceApiKeyName, serviceApiKeyValue)
 }
