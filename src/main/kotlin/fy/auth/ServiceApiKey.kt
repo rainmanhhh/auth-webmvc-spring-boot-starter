@@ -18,6 +18,8 @@ class ServiceApiKey {
    */
   var salt = DigestUtils.md5DigestAsHex(Math.random().toString().toByteArray())
 
+  fun isConfigValid() = name.isNotEmpty() && value.isNotEmpty()
+
   /**
    * encode SAK. format: MD5([value]+[salt]).toHex() + [salt]
    * @return if name or value is empty return null; else return encoded SAK
@@ -29,5 +31,11 @@ class ServiceApiKey {
     } else null
   }
 
-  fun isConfigValid() = name.isNotEmpty() && value.isNotEmpty()
+  /**
+   * check if the input key match with local key
+   */
+  fun check(inputKey: String?): Boolean {
+    if (inputKey == null) return false
+    return inputKey == encode()
+  }
 }
