@@ -22,10 +22,10 @@ class ServiceApiKey {
    */
   var salt = DigestUtils.md5DigestAsHex(Math.random().toString().toByteArray())
 
-  fun isConfigValid() = name.isNotEmpty() && value.isNotEmpty()
+  private fun isConfigValid() = name.isNotEmpty() && value.isNotEmpty()
 
   /**
-   * encode SAK. format: MD5([value]+[salt]).toHex() + [salt]
+   * encode SAK. format: MD5([value]+[salt]).toHex() + [salt] (hex: 32 chars, lower case)
    * @return if name or value is empty return null; else return encoded SAK
    */
   fun encode(): String? {
@@ -39,15 +39,21 @@ class ServiceApiKey {
   }
 
   /**
+   * remove the salt suffix from encoded SAK
+   * @see [encode]
+   */
+  private fun removeSalt(encodedKey: String) = encodedKey.substring(0, 32)
+
+  /**
    * check if the input key match with local key
    */
   fun check(inputKey: String?): Boolean {
-    return if (inputKey == null) {
-      logger.debug("inputKey is null")
+    val localKey = encode()
+    return if (inputKey == null || localKey == null) {
+      logger.debug("inputKey or localKey is null")
       false
     } else {
-      val localKey = encode()
-      val result = inputKey == localKey
+      val result = removeSalt(inputKey) == removeSalt(localKey)
       if (!result) logger.warn("SAK not match! inputKey: {}, localKey: {}", inputKey, localKey)
       result
     }
