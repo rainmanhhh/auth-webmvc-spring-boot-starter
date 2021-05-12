@@ -14,12 +14,6 @@ import org.springframework.context.annotation.Import
 @Configuration
 class AuthWebMvcAutoConfiguration {
   /**
-   * 1. enable [UserParsingFilter]: saving jwt token(and user info) from incoming request
-   * 2. enable [AuthInterceptor]: add jwt token and SAK to outgoing request
-   */
-  var enableFilterAndInterceptor = true
-
-  /**
    * user parsing filter order
    */
   var userParsingFilterOrder = 0
