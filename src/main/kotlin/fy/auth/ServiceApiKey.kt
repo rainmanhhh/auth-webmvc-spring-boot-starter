@@ -1,8 +1,12 @@
 package fy.auth
 
+import org.slf4j.LoggerFactory
 import org.springframework.util.DigestUtils
 
 class ServiceApiKey {
+  companion object {
+    private val logger = LoggerFactory.getLogger(ServiceApiKey::class.java)
+  }
   /**
    * SAK http header name
    */
@@ -28,14 +32,24 @@ class ServiceApiKey {
     return if (isConfigValid()) {
       val hex = DigestUtils.md5DigestAsHex((value + salt).toByteArray())
       hex + salt
-    } else null
+    } else {
+      logger.warn("SAK config not valid(name or value is empty)")
+      null
+    }
   }
 
   /**
    * check if the input key match with local key
    */
   fun check(inputKey: String?): Boolean {
-    if (inputKey == null) return false
-    return inputKey == encode()
+    return if (inputKey == null) {
+      logger.debug("inputKey is null")
+      false
+    } else {
+      val localKey = encode()
+      val result = inputKey == localKey
+      if (!result) logger.warn("SAK not match! inputKey: {}, localKey: {}", inputKey, localKey)
+      result
+    }
   }
 }
