@@ -23,8 +23,11 @@ class ServiceApiKey {
    * @return if name or value is empty return null; else return encoded SAK
    */
   fun encode(): String? {
-    if (name.isEmpty() || value.isEmpty()) return null
-    val hex = DigestUtils.md5DigestAsHex((value + salt).toByteArray())
-    return hex + salt
+    return if (isConfigValid()) {
+      val hex = DigestUtils.md5DigestAsHex((value + salt).toByteArray())
+      hex + salt
+    } else null
   }
+
+  fun isConfigValid() = name.isNotEmpty() && value.isNotEmpty()
 }
