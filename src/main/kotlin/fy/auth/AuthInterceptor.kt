@@ -7,7 +7,6 @@ import fy.auth.sak.ServiceApiKey
 import fy.auth.user.UserHolder
 import org.springframework.core.Ordered
 import org.springframework.http.HttpHeaders
-import org.springframework.util.DigestUtils
 
 /**
  * 1. if SAK name and value are not empty, add SAK to request header. format is `MD5(value + salt) + salt`
@@ -21,7 +20,7 @@ class AuthInterceptor(
 
   override fun apply(template: RequestTemplate) {
     // add SAK to request
-    serviceApiKey.encode()?.let { template.header(serviceApiKey.name, it) }
+    serviceApiKey.encodeLocal()?.let { template.header(serviceApiKey.name, it) }
     // add jwt token to request
     val jwtToken = UserHolder.jwtToken.get()
     val user = UserHolder.user.get()
