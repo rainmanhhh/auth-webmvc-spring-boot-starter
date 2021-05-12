@@ -3,6 +3,7 @@ package fy.auth
 import ez.jwt.JwtAutoConfiguration
 import ez.jwt.JwtUtil
 import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.boot.context.properties.NestedConfigurationProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
@@ -24,17 +25,12 @@ class AuthAutoConfiguration {
   /**
    * when access one service from another, if this key matched, allow to access any api without user perm check
    */
-  var serviceApiKeyName = "X-SAK"
-
-  /**
-   * when access one service from another, if this key matched, allow to access any api without user perm check
-   */
-  var serviceApiKeyValue = ""
+  @NestedConfigurationProperty
+  var serviceApiKey = ServiceApiKey()
 
   @Bean
   fun userParsingFilter(jwtUtil: JwtUtil) = UserParsingFilter(userParsingFilterOrder, jwtUtil)
 
   @Bean
-  fun authInterceptor() =
-    AuthInterceptor(authInterceptorOrder, serviceApiKeyName, serviceApiKeyValue)
+  fun authInterceptor() = AuthInterceptor(authInterceptorOrder, serviceApiKey)
 }

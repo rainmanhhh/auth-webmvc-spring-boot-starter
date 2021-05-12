@@ -14,6 +14,9 @@ import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
 
+/**
+ * if there's a valid jwtToken in request, save it(and parsed [ez.jwt.JwtUser]) to [UserHolder]
+ */
 class UserParsingFilter(
   private val order: Int,
   private val jwtUtil: JwtUtil
@@ -21,11 +24,13 @@ class UserParsingFilter(
 
   override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
     val req = request as HttpServletRequest
-    val authHeader = req.getHeaders(HttpHeaders.AUTHORIZATION).iterator().asSequence()
-      .firstOrNull { jwtUtil.verifySchema(it) }
-    if (authHeader == null) chain.doFilter(request, response)
+    val jwtToken = Iterable {
+      req.getHeaders(HttpHeaders.AUTHORIZATION).iterator()
+    }.firstOrNull {
+      jwtUtil.verifySchema(it)
+    }
+    if (jwtToken == null) chain.doFilter(request, response)
     else {
-      UserHolder.jwtAuthHeader.set(authHeader)
       val user = try {
         jwtUtil.verifyAuthHeader(Iterable {
           req.getHeaders(HttpHeaders.AUTHORIZATION).asIterator()
@@ -38,11 +43,12 @@ class UserParsingFilter(
         )
       }
       UserHolder.user.set(user)
+      UserHolder.jwtToken.set(jwtToken)
       try {
         chain.doFilter(request, response)
       } finally {
-        UserHolder.jwtAuthHeader.set("")
         UserHolder.user.set(Anon)
+        UserHolder.jwtToken.set("")
       }
     }
   }
