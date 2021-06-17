@@ -5,7 +5,7 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>fy</groupId>
+  <groupId>com.gitee.hnsfy</groupId>
   <artifactId>auth-webmvc-spring-boot-starter</artifactId>
   <version>1.0.0</version>
   <packaging>jar</packaging>
