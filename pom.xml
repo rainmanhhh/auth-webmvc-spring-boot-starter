@@ -21,7 +21,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>fy</groupId>
+      <groupId>com.gitee.hnsfy</groupId>
       <artifactId>auth-sak-spring-boot-starter</artifactId>
       <version>1.0.0</version>
     </dependency>
