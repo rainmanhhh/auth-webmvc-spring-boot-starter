@@ -3,7 +3,7 @@ package ez.auth
 import ez.jwt.isAnon
 import feign.RequestInterceptor
 import feign.RequestTemplate
-import fy.auth.sak.ServiceApiKey
+import ez.auth.sak.ServiceApiKey
 import org.springframework.core.Ordered
 import org.springframework.http.HttpHeaders
 

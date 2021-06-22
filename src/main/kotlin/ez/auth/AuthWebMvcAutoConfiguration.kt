@@ -2,14 +2,14 @@ package ez.auth
 
 import ez.jwt.JwtAutoConfiguration
 import ez.jwt.JwtUtil
-import fy.auth.sak.AuthServiceApiKeyAutoConfiguration
-import fy.auth.sak.ServiceApiKey
+import ez.auth.sak.AuthServiceApiKeyAutoConfiguration
+import ez.auth.sak.ServiceApiKey
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 
-@ConfigurationProperties("fy.auth.web-mvc")
+@ConfigurationProperties("ez.auth.web-mvc")
 @Import(value = [JwtAutoConfiguration::class, AuthServiceApiKeyAutoConfiguration::class])
 @Configuration
 class AuthWebMvcAutoConfiguration {
