@@ -1,4 +1,4 @@
-package fy.auth
+package ez.auth
 
 import ez.jwt.JwtAutoConfiguration
 import ez.jwt.JwtUtil
@@ -14,18 +14,14 @@ import org.springframework.context.annotation.Import
 @Configuration
 class AuthWebMvcAutoConfiguration {
   /**
-   * user parsing filter order
+   * order of user parsing filter(for spring webmvc)
    */
   var userParsingFilterOrder = 0
 
   /**
-   * auth interceptor order
+   * order of auth interceptor(for feign client)
    */
   var authInterceptorOrder = 0
-
-  /**
-   * when access one service from another, if this key matched, allow to access any api without user perm check
-   */
 
   @Bean
   fun userParsingFilter(jwtUtil: JwtUtil) = UserParsingFilter(userParsingFilterOrder, jwtUtil)

@@ -1,8 +1,7 @@
-package fy.auth
+package ez.auth
 
 import ez.jwt.Anon
 import ez.jwt.JwtUtil
-import fy.auth.user.UserHolder
 import io.jsonwebtoken.ExpiredJwtException
 import org.springframework.core.Ordered
 import org.springframework.http.HttpHeaders

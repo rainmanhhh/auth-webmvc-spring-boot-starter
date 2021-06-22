@@ -5,12 +5,11 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.gitee.hnsfy</groupId>
   <artifactId>auth-webmvc-spring-boot-starter</artifactId>
   <version>1.0.0</version>
   <packaging>jar</packaging>
 
-  <name>fy auth-webmvc-spring-boot-starter</name>
+  <name>auth-webmvc-spring-boot-starter</name>
 
   <parent>
     <groupId>com.github.rainmanhhh</groupId>
