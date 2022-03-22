@@ -28,8 +28,11 @@ class UserParsingFilter(
     }.firstOrNull {
       jwtUtil.verifySchema(it)
     }
-    if (jwtToken == null) chain.doFilter(request, response)
-    else {
+    if (jwtToken == null) {
+      UserHolder.user.set(Anon)
+      UserHolder.jwtToken.set("")
+      chain.doFilter(request, response)
+    } else {
       val user = try {
         jwtUtil.verifyAuthHeader(Iterable {
           req.getHeaders(HttpHeaders.AUTHORIZATION).asIterator()
