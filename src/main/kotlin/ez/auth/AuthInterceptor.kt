@@ -8,8 +8,8 @@ import org.springframework.core.Ordered
 import org.springframework.http.HttpHeaders
 
 /**
- * 1. if SAK name and value are not empty, add SAK to request header. format is `MD5(value + salt) + salt`
- * 2. if there's a valid [ez.jwt.JwtUser] saved in [UserHolder], add it's token to request header
+ * 1. for calling other service from local: if SAK name and value are not empty, add SAK to request header(value is provided by [ServiceApiKey.encode])
+ * 2. for passing by user jwt: if there's a valid [ez.jwt.JwtUser] saved in [UserHolder], add it's token to request header
  */
 class AuthInterceptor(
   private val order: Int,
