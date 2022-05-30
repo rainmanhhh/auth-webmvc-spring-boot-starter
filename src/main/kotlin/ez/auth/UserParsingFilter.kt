@@ -7,6 +7,8 @@ import org.springframework.core.Ordered
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 import javax.servlet.Filter
 import javax.servlet.FilterChain
 import javax.servlet.ServletRequest
@@ -18,15 +20,19 @@ import javax.servlet.http.HttpServletRequest
  */
 class UserParsingFilter(
   private val order: Int,
-  private val jwtUtil: JwtUtil
+  private val jwtUtil: JwtUtil,
+  private val config: AuthWebMvcAutoConfiguration,
 ) : Filter, Ordered {
 
   override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
     val req = request as HttpServletRequest
-    val jwtToken = Iterable {
-      req.getHeaders(HttpHeaders.AUTHORIZATION).iterator()
-    }.firstOrNull {
+    val jwtToken = req.getHeaders(HttpHeaders.AUTHORIZATION).asSequence().firstOrNull {
       jwtUtil.verifySchema(it)
+    } ?: req.cookies.firstOrNull {
+      it.name == config.cookieName
+    }?.value?.let {
+      val v = URLDecoder.decode(it, StandardCharsets.UTF_8)
+      if (jwtUtil.verifySchema(v)) v else null
     }
     if (jwtToken == null) {
       UserHolder.user.set(Anon)
@@ -34,9 +40,7 @@ class UserParsingFilter(
       chain.doFilter(request, response)
     } else {
       val user = try {
-        jwtUtil.verifyAuthHeader(Iterable {
-          req.getHeaders(HttpHeaders.AUTHORIZATION).asIterator()
-        })
+        jwtUtil.verifyToken(jwtToken)
       } catch (e: ExpiredJwtException) {
         throw ResponseStatusException(
           HttpStatus.UNAUTHORIZED,

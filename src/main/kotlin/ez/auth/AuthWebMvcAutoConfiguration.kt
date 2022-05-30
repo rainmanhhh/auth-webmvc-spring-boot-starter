@@ -1,9 +1,9 @@
 package ez.auth
 
-import ez.jwt.JwtAutoConfiguration
-import ez.jwt.JwtUtil
 import ez.auth.sak.AuthServiceApiKeyAutoConfiguration
 import ez.auth.sak.ServiceApiKey
+import ez.jwt.JwtAutoConfiguration
+import ez.jwt.JwtUtil
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -23,8 +23,13 @@ class AuthWebMvcAutoConfiguration {
    */
   var authInterceptorOrder = 0
 
+  /**
+   * if there's no jwt in Authorization header, try to find jwt in cookie by this name
+   */
+  var cookieName = "JWT"
+
   @Bean
-  fun userParsingFilter(jwtUtil: JwtUtil) = UserParsingFilter(userParsingFilterOrder, jwtUtil)
+  fun userParsingFilter(jwtUtil: JwtUtil) = UserParsingFilter(userParsingFilterOrder, jwtUtil, this)
 
   @Bean
   fun authInterceptor(serviceApiKey: ServiceApiKey) =
