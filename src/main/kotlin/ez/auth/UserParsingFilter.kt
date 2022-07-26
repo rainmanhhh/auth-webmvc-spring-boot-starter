@@ -40,7 +40,7 @@ class UserParsingFilter(
       chain.doFilter(request, response)
     } else {
       val user = try {
-        jwtUtil.verifyToken(jwtToken)
+        jwtUtil.verifyTokenWithPrefix(jwtToken)
       } catch (e: ExpiredJwtException) {
         throw ResponseStatusException(
           HttpStatus.UNAUTHORIZED,
