@@ -28,7 +28,7 @@ class UserParsingFilter(
     val req = request as HttpServletRequest
     val jwtToken = req.getHeaders(HttpHeaders.AUTHORIZATION).asSequence().firstOrNull {
       jwtUtil.verifySchema(it)
-    } ?: req.cookies.firstOrNull {
+    } ?: req.cookies?.firstOrNull {
       it.name == config.cookieName
     }?.value?.let {
       val v = URLDecoder.decode(it, StandardCharsets.UTF_8)
